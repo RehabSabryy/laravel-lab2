@@ -11,8 +11,12 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Model
 {
+    // use SoftDeletes;
     use HasFactory;
     protected $fillable = [
         'name', 'email'
     ];
+    public function posts() {
+        return $this->hasMany(Post::class);
+    }
 }

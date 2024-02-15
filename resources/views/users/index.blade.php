@@ -6,9 +6,9 @@
     <h1>Users</h1>
     <ul>
         @foreach ($users as $user)
-            <li>{{ $user->name }} - {{ $user->email }}
-                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-primary">Edit</a>
-            </li>
+            <h3>
+            <a href="{{url("/users/{$user->id}")}}">{{ $user->name }} </a>
+            </h3>
         @endforeach
     </ul>
 </div>

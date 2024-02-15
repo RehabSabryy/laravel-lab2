@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+
     public function index()
     {
-        $users = User::all();
+        $users = User::withCount('posts')->paginate(10);
         return view('users.index', ['users' => $users]);
     }
     public function create()
@@ -55,4 +57,5 @@ class UserController extends Controller
         $user->delete();
         return redirect(url('/users/'));
     }
+   
 }
