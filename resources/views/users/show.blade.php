@@ -6,6 +6,8 @@
     <table class="table">
         <tbody>
             <tr>
+            <h5 >User ID = {{ $user->id }}</h5>
+
                 <th>Name:</th>
                 <td>{{ $user->name }}</td>
             </tr>
@@ -15,7 +17,7 @@
             </tr>
             <tr>
                 <th>Posts Count:</th>
-                <td>{{ $user->posts_count }}</td>
+                <td>{{ $user->posts()->count() }}</td>
             </tr>
             <tr>
                 <th>Created At:</th>
@@ -23,7 +25,6 @@
             </tr>
         </tbody>
     </table>
-
     <h2>Posts Owned by {{ $user->name }}</h2>
     @if($posts->isEmpty())
         <p>{{ $user->name }} has no posts yet.</p>
@@ -37,7 +38,7 @@
 
     <div class="d-flex">
         <a class="btn btn-success me-1" href="{{ url('users/' . $user->id . '/edit') }}">Edit</a>
-        <form action="{{ url('users/' . $user->id) }}" method="POST">
+        <form action="{{ route('users.destroy', $user->id) }}" method="post">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-danger">Delete</button>

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('body');
             $table->boolean('enabled')->default(false);
             $table->date('published_at');
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

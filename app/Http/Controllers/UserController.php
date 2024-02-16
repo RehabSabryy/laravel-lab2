@@ -53,9 +53,28 @@ class UserController extends Controller
     }
     public function destroy($userId)
     {
-        $user = User::findorfail($userId);
+        $user = User::findOrFail($userId);
+    
+    // Log messages for debugging
+    logger("Deleting user {$user->id}");
+
+    // Attempt to delete associated posts
+    try {
+        $deletedPostsCount = $user->posts()->delete();
+        logger("Deleted {$deletedPostsCount} posts");
+    } catch (\Exception $e) {
+        logger("Error deleting posts: {$e->getMessage()}");
+    }
+    
+    // Attempt to delete the user
+    try {
         $user->delete();
-        return redirect(url('/users/'));
+        logger("User deleted successfully");
+    } catch (\Exception $e) {
+        logger("Error deleting user: {$e->getMessage()}");
+    }
+    
+    return redirect(url('/users'));
     }
    
 }

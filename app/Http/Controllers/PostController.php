@@ -14,6 +14,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
+        // event(new \App\Events\PostCreated($posts));
         return view('posts.index', ['posts' => $posts]);
     }
 
@@ -51,6 +52,7 @@ class PostController extends Controller
     {
         $user = User::select('id', 'name')->where('id', $post->user_id)->first();
         return view('posts.show', ['post' => $post], ['user' => $user]);
+
     }
 
     /**
