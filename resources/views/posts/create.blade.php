@@ -6,6 +6,7 @@
     <h1>Add New Post</h1>
     <form action="{{ url('/posts') }}" method="post">
         @csrf
+     
         <div class="mb-3">
             <label for="user_id" class="form-label">User ID</label>
             <select name="user_id" id="user_id" class="form-select">
@@ -32,7 +33,7 @@
 
         <div class="mb-3">
             <label for="published_at" class="form-label">Publish At</label>
-            <input type="text" name="published_at" id="published_at" class="form-control">
+            <input type="date" name="published_at" id="published_at" class="form-control">
         </div>
         <div class="form-group form-check">
                 <input type="checkbox" class="form-check-input" id="enabled" name="enabled">

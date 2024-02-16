@@ -1,22 +1,47 @@
-{{-- resources/views/show.blade.php --}}
 @extends('layouts.main')
 
 @section('content')
-<ul>
-    <h2>
-    <li>{{ $user->name }}</li>
-    </h2>
-    <li>{{ $user->email }}</li>
-    <td>{{ $user->posts_count }}</td>
+<div class="container">
+    <h2>User Details</h2>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Name:</th>
+                <td>{{ $user->name }}</td>
+            </tr>
+            <tr>
+                <th>Email:</th>
+                <td>{{ $user->email }}</td>
+            </tr>
+            <tr>
+                <th>Posts Count:</th>
+                <td>{{ $user->posts_count }}</td>
+            </tr>
+            <tr>
+                <th>Created At:</th>
+                <td>{{ $user->created_at }}</td>
+            </tr>
+        </tbody>
+    </table>
 
-    <li>Created At:{{ $user->created_at }}</li>
-    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-primary">Edit</a>
-    <form action="{{url("users/>{$user->id}")}}">
-        @csrf
-        @method('delete')
-        <input type="submit" value="delete">
-    </form>
+    <h2>Posts Owned by {{ $user->name }}</h2>
+    @if($posts->isEmpty())
+        <p>{{ $user->name }} has no posts yet.</p>
+    @else
+        <ul>
+            @foreach($posts as $post)
+                <li><a href="{{ url('posts/' . $post->id) }}">{{ $post->title }}</a></li>
+            @endforeach
+        </ul>
+    @endif
 
-</ul>
-
+    <div class="d-flex">
+        <a class="btn btn-success me-1" href="{{ url('users/' . $user->id . '/edit') }}">Edit</a>
+        <form action="{{ url('users/' . $user->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+</div>
 @endsection

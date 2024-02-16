@@ -47,10 +47,10 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Post $post)
     {
-        $post = Post::findorfail($id);
-        return view('posts.show', ['post' => $post]);
+        $user = User::select('id', 'name')->where('id', $post->user_id)->first();
+        return view('posts.show', ['post' => $post], ['user' => $user]);
     }
 
     /**
@@ -58,8 +58,9 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
-        $post = Post::findorfail($id);
-        return view('posts.edit', ['post' => $post]);
+        $users = User::select('id')->get();
+        $posts = Post::findorfail($id);
+        return view('posts.edit', ['post' => $posts], ['users' => $users]);
     }
 
     /**
@@ -71,9 +72,9 @@ class PostController extends Controller
             'title' => 'required',
             'body' => 'required'
         ]);
-        $post = Post::findorfail($id);
-        $post->update(
-            ['title' => $request->title, 'body' => $request->body]
+        $posts = Post::findorfail($id);
+        $posts->update(
+            ['title' => $request->title, 'body' => $request->body, 'slug' => $request->slug, 'user_id' => $request->user_id, 'published_at' => $request->published_at]
         );
         return redirect(url('/posts/'));
     }

@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Post;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -12,7 +12,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::withCount('posts')->paginate(10);
-        return view('users.index', ['users' => $users]);
+    return view('users.index', compact('users'));
     }
     public function create()
     {
@@ -29,10 +29,10 @@ class UserController extends Controller
         );
         return redirect(url('/users'));
     }
-    public function show($userId)
+    public function show(User $user)
     {
-        $user = User::findorfail($userId);
-        return view('users.show', ['user' => $user]);
+        $posts = Post::select('title', 'id')->where('user_id', $user->id)->get();
+        return view('users.show', ['user' => $user, 'posts' => $posts]);
     }
     public function edit($userId)
     {
