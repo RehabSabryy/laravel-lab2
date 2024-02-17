@@ -4,7 +4,6 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,9 +15,11 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::get('/', function () {
     return view('welcome');
 });
+
 // users routes
 Route::resource('users', UserController::class);
 
@@ -30,4 +31,3 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('posts', PostController::class);
 });
 require __DIR__.'/auth.php';
-
