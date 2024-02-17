@@ -1,5 +1,7 @@
 @extends('layouts.main')
+
 @section('title', 'Post Details')
+
 @section('content')
 <div class="container">
     <h2>Post Details</h2>
@@ -27,13 +29,17 @@
             </tr>
         </tbody>
     </table>
-    <div  class="d-flex">
-    <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-primary me-1">Edit</a>
-    <form action="{{ route('posts.destroy', $post->id) }}" method="post">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-danger">Delete</button>
-        </div>
-    </form>
+    <div class="d-flex">
+    @if(auth()->check() && $post->user_id == auth()->user()->id)
+        <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-primary me-1">Edit</a>
+        <form action="{{ route('posts.destroy', $post->id) }}" method="post">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    @else
+        <a href="{{ route('posts.show', $post->id) }}" class="btn btn-primary me-1">Like</a>
+    @endif
+    </div>
 </div>
 @endsection

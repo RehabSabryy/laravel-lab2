@@ -6,8 +6,7 @@
     <table class="table">
         <tbody>
             <tr>
-            <h5 >User ID = {{ $user->id }}</h5>
-
+                <h5>User ID = {{ $user->id }}</h5>
                 <th>Name:</th>
                 <td>{{ $user->name }}</td>
             </tr>
@@ -31,18 +30,25 @@
     @else
         <ul>
             @foreach($posts as $post)
-                <li><a href="{{ url('posts/' . $post->id) }}">{{ $post->title }}</a></li>
+                <li>
+                    <a href="{{ url('posts/' . $post->id) }}">{{ $post->title }}</a>
+                    @if(auth()->check() && $post->user_id == auth()->user()->id)
+                        <div class="d-flex">
+                            <a class="btn btn-success me-1" href="{{ url('posts/' . $post->id . '/edit') }}">Edit</a>
+                            <form action="{{ route('posts.destroy', $post->id) }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    @else
+                        <div class="d-flex">
+                            <a class="btn btn-primary me-1" href="{{ url('posts/' . $post->id) }}">View</a>
+                        </div>
+                    @endif
+                </li>
             @endforeach
         </ul>
     @endif
-
-    <div class="d-flex">
-        <a class="btn btn-success me-1" href="{{ url('users/' . $user->id . '/edit') }}">Edit</a>
-        <form action="{{ route('users.destroy', $user->id) }}" method="post">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-    </div>
 </div>
 @endsection
