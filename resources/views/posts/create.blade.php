@@ -7,14 +7,7 @@
     <form action="{{ url('/posts') }}" method="post">
         @csrf
      
-        <div class="mb-3">
-            <label for="user_id" class="form-label">User ID</label>
-            <select name="user_id" id="user_id" class="form-select">
-                @foreach ($users as $user)
-                <option value="{{ $user->id }}">{{ $user->id }}</option>
-                @endforeach
-            </select>
-        </div>
+      
 
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>

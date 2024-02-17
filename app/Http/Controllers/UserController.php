@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Post;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -18,15 +23,31 @@ class UserController extends Controller
     {
         return view('users.create');
     }
+   
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|email'
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-        User::create(
-            ['name' => $request->name, 'email' => $request->email]
-        );
+
+        DB::transaction(function () use ($request) {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email
+            ]);
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+            event(new Registered($user));
+            Auth::login($user);        
+            // Increment the post_count for the user
+            $user->increment('post_count');
+        });
+
         return redirect(url('/users'));
     }
     public function show(User $user)
@@ -45,11 +66,16 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email'
         ]);
-        $user = User::findorfail($userId);
-        $user->update(
-            ['name' => $request->name, 'email' => $request->email]
-        );
-        return redirect(url('/users/'));
+
+        DB::transaction(function () use ($request, $userId) {
+            $user = User::findOrFail($userId);
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email
+            ]);
+        });
+
+        return redirect(url('/users'));
     }
     public function destroy($userId)
     {

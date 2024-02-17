@@ -32,8 +32,24 @@
                                 <li><a class="dropdown-item" href="{{ url('posts/create') }}">Create Post</a></li>
                             </ul>
                         </li>
+                        </div>
+                        @guest
+    <!-- Display login and registration buttons for guests -->
+    <div>
+    <a href="{{ route('login') }}" class="btn btn-link me-1">Login</a>
+    <a href="{{ route('register') }}"   class="btn btn-link">Register</a>
+    </div>
+@endguest
+
+@auth
+    <!-- Display logout button for authenticated users -->
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="btn btn-link">Logout</button>
+    </form>
+@endauth
                     </ul>
                 </div>
-            </div>
+           
         </nav>
     </nav>
