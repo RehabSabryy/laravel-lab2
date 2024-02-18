@@ -1,46 +1,35 @@
+
 @extends('layouts.main')
-
+@section('title', 'Users')
 @section('content')
-<div class="container">
-    <h1>Users</h1>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Posts Count</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($users as $user)
-            <tr>
-                <td>{{ $user->id }}</td>
-                <td><a href="{{ route('users.show', $user->id) }}">{{ $user->name }}</a></td>
-                <td>{{ $user->email }}</td>
-                <td>{{ $user->posts_count }}</td>
-                <td>
-                    <div class="d-flex">
-                        @if(auth()->user()->id == $user->id)
-                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary me-2">Edit</a>
-                        @else
-                            <a href="{{ route('users.show', $user->id) }}" class="btn btn-primary me-2">View</a>
-                        @endif
-                        @if(auth()->user()->id == $user->id)
-                            <form action="{{ route('users.destroy', $user->id)}}" method="post">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-                        @endif
+<div class="container mt-4">
+    <h1 class="mb-4">Users</h1>
+    <div class="row">
+        @foreach ($users as $user)
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="https://via.placeholder.com/150" class="rounded-circle me-3" alt="Profile Image" width="50">
+                        <div>
+                            <h5 class="mb-0"><a href="{{ route('users.show', $user->id) }}" class="text-decoration-none">{{ $user->name }}</a></h5>
+                            <p class="text-muted mb-0">{{ $user->email }}</p>
+                        </div>
                     </div>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+                    <p class="card-text">Posts: {{ $user->posts_count }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        @if(auth()->user()->id == $user->id)
+                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                        @endif
+                        <a href="{{ route('users.show', $user->id) }}" class="btn btn-sm btn-outline-primary">View Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
 </div>
-<div class="d-flex justify-content-center"> {{ $users->links() }}</div>
-
+<div class="d-flex justify-content-center mt-4">{{ $users->links() }}</div>
 @endsection

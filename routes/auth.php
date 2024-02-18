@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SocialController;
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -57,3 +58,12 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
 });
+
+
+Route::middleware('guest')->group(function() {
+    Route::get('auth' , [SocialController::class, 'auth']);
+   
+});
+
+Route::get('auth/{provider}/redirect' , [SocialController::class, 'redirect'])->name('auth.socialite.redirect');
+Route::get('auth/{provider}/callback' , [SocialController::class, 'callback'])->name('auth.socialite.callback');

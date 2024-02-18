@@ -18,7 +18,9 @@
                                 Users
                             </a>
                             <ul class="dropdown-menu ">
+                                @auth
                                 <li><a class="dropdown-item" href="{{ url('users') }}">Users List</a></li>
+                                @endauth
                                 <li><a class="dropdown-item" href="{{ url('users/create') }}">Create User</a></li>
                             </ul>
                         </li>
@@ -27,17 +29,19 @@
                                 aria-expanded="false">
                                 Posts
                             </a>
+                            @auth
                             <ul class="dropdown-menu ">
                                 <li><a class="dropdown-item" href="{{ url('posts') }}">Posts List</a></li>
                                 <li><a class="dropdown-item" href="{{ url('posts/create') }}">Create Post</a></li>
                             </ul>
+                            @endauth
                         </li>
                         </div>
-                        @guest
+@guest
     <!-- Display login and registration buttons for guests -->
     <div>
-    <a href="{{ route('login') }}" class="btn btn-link me-1">Login</a>
-    <a href="{{ route('register') }}"   class="btn btn-link">Register</a>
+    <a href="{{ route('login') }}" class="btn btn-link me-1" style="color:#DC3545;">Login</a>
+    <a href="{{ route('register') }}"   class="btn btn-link" style="color:#DC3545;">Register</a>
     </div>
 @endguest
 
@@ -46,8 +50,14 @@
     <form method="POST" action="{{ route('logout') }}">
         @csrf
         <button type="submit" class="btn btn-link">Logout</button>
+
     </form>
-@endauth
+    <form method="get" action="{{ route('profile.edit') }}">
+        @csrf
+        <button type="submit" class="btn btn-link">Profile</button>
+
+    </form>
+                    @endauth
                     </ul>
                 </div>
            

@@ -7,10 +7,15 @@ use App\Models\Post;
 use App\Models\User;
 use App\Events\PostCreated;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
+     */
+ 
+    /**
+     * Store a newly created resource in storage.
      */
     public function __construct()
     {
@@ -21,7 +26,6 @@ class PostController extends Controller
      public function index()
     {
         $posts = Post::all();
-        // event(new \App\Events\PostCreated($posts));
         return view('posts.index', ['posts' => $posts]);
     }
 
@@ -43,19 +47,19 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required',
             'body' => 'required',
-            'slug' => 'required',
             'published_at' => 'required|date_format:Y-m-d',
         ]);
         // Retrieve the authenticated user
         $user = Auth::user();
-
+        $imagePath = $request->file('image')->store('public/images');
+        $slug = Str::slug($request->title);
         // Create and save the post
         $post = new Post();
         $post->title = $request->title;
-        $post->slug = $request->slug;
+        $post->slug = $slug;
         $post->body = $request->body;
         $post->published_at = $request->published_at;
-
+        $post->image =$imagePath;
         // Associate the post with the authenticated user
         $post->user()->associate($user);
 
@@ -107,7 +111,6 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required',
             'body' => 'required',
-            // Add other validation rules as needed
         ]);
 
         // Update the post
@@ -118,8 +121,6 @@ class PostController extends Controller
             'published_at' => $request->published_at,
             'enabled' => $request->has('enabled'),
         ]);
-
-        // Redirect to a success page or wherever you want
         return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
     }
 

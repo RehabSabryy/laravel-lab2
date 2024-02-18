@@ -23,7 +23,7 @@
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
-
+       
         <!-- Remember Me -->
         <div class="block mt-4">
             <label for="remember_me" class="inline-flex items-center">
@@ -38,7 +38,12 @@
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
-
+            <!-- <div>
+            <a  href="{{route('auth.socialite.redirect', ['provider' => 'facebook'])}}">Facebook</a>
+        </div> -->
+        <x-primary-button class="ms-3">
+        <a  href="{{route('auth.socialite.redirect', ['provider' => 'facebook'])}}">Facebook</a>
+        </x-primary-button>
             <x-primary-button class="ms-3">
                 {{ __('Log in') }}
             </x-primary-button>
